@@ -1,0 +1,5 @@
+{
+    "require": {
+        "guzzle/http": "~3.9"
+    }
+}
