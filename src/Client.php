@@ -130,7 +130,17 @@ class Client {
           'user_id' => [$receiver_id],
           'value_id' => $values,
         );
-        $this->request('kudos.xml', 'POST', ['body' => $data]);
+        $response = $this->request('kudos.xml', 'POST', ['body' => $data]);
+
+        // Check if we got an error.
+        $response = new \SimpleXMLElement($response);
+        if ($response->getName() == 'error') {
+            $messages = [];
+            foreach ($response->messages as $msg) {
+                $messages[] = (string) $msg;
+            }
+            throw new TribeHrException($messages, (string) $response->code);
+        }
     }
 
     /**
@@ -143,6 +153,7 @@ class Client {
 
         $response = $this->request('users.xml');
         $users = new \SimpleXMLElement($response);
+        // TODO: Store users as a data object rather than the XML element.
         foreach ($users->user as $user) {
             $user_list[(string) $user['id']] = $user;
         }
