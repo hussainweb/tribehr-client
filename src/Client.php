@@ -115,19 +115,37 @@ class Client {
     /**
      * Send Kudos to another user.
      *
-     * @param string|int $receiver_id
+     * @param array $receiver_ids
      * @param string $kudos_note
      * @param array $values
      */
-    public function sendKudos($receiver_id, $kudos_note, $values = []) {
-        if (!is_numeric($receiver_id)) {
-            $users = array_flip($this->getUserEmails());
-            $receiver_id = $users[$receiver_id];
+    public function sendKudos($receiver_ids, $kudos_note, $values = []) {
+        $user_emails = NULL;
+        $user_ids = [];
+        foreach ($receiver_ids as $id) {
+            // If the id is an email address, map it to the id.
+            if (!is_numeric($id)) {
+                // Only load users and emails if not already done.
+                if ($user_emails === NULL) {
+                    $user_emails = array_flip($this->getUserEmails());
+                }
+
+                if (!empty($user_emails[$id])) {
+                    $user_ids[] = $user_emails[$id];
+                }
+            }
+            else {
+                $user_ids[] = $id;
+            }
+        }
+
+        if (empty($user_ids)) {
+            throw new \InvalidArgumentException("No receiver users found or specified.");
         }
 
         $data = array(
           'note' => $kudos_note,
-          'user_id' => [$receiver_id],
+          'user_id' => $user_ids,
           'value_id' => $values,
         );
         $response = $this->request('kudos.xml', 'POST', ['body' => $data]);
