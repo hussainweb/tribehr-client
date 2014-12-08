@@ -3,6 +3,7 @@
     "description": "TribeHR client is a Guzzle based client to interact with TribeHR API.",
     "require": {
         "php": ">=5.4.0",
+        "lib-libxml": "*",
         "guzzlehttp/guzzle": "~5.0"
     },
     "autoload": {
