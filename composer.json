@@ -4,6 +4,14 @@
     "type": "library",
     "keywords": ["tribehr", "tribehr api", "kudos"],
     "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Hussain Abbas",
+            "email": "hussainweb@gmail.com",
+            "homepage": "http://hussainweb.me",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": ">=5.4.0",
         "lib-libxml": "*",
