@@ -7,8 +7,11 @@
 namespace Hussainweb\TribeHr;
 
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
+use Hussainweb\TribeHr\Message\Kudos;
+use Hussainweb\TribeHr\Message\UserBasic;
 
-class Client {
+class Client
+{
     /**
      * The Guzzle client to use for actual transfers.
      *
@@ -36,13 +39,20 @@ class Client {
      */
     protected $apikey;
 
+    const API_VERSION = '2.0.0';
+
     /**
      * @param GuzzleClientInterface $http_client
      * @param string|null $subdomain
      * @param string|null $username
      * @param string|null $apikey
      */
-    public function __construct(GuzzleClientInterface $http_client, $subdomain = NULL, $username = NULL, $apikey = NULL) {
+    public function __construct(
+      GuzzleClientInterface $http_client,
+      $subdomain = null,
+      $username = null,
+      $apikey = null
+    ) {
         $this->httpClient = $http_client;
         $this->setAccess($username, $apikey, $subdomain);
     }
@@ -52,7 +62,8 @@ class Client {
      *
      * @param string $subdomain
      */
-    public function setSubdomain($subdomain) {
+    public function setSubdomain($subdomain)
+    {
         $this->subdomain = $subdomain;
     }
 
@@ -61,7 +72,8 @@ class Client {
      *
      * @param string $username
      */
-    public function setUsername($username) {
+    public function setUsername($username)
+    {
         $this->username = $username;
     }
 
@@ -70,7 +82,8 @@ class Client {
      *
      * @param string $apikey
      */
-    public function setApiKey($apikey) {
+    public function setApiKey($apikey)
+    {
         $this->apikey = $apikey;
     }
 
@@ -81,12 +94,39 @@ class Client {
      * @param string $apikey
      * @param string|null $subdomain
      */
-    public function setAccess($username, $apikey, $subdomain = NULL) {
+    public function setAccess($username, $apikey, $subdomain = null)
+    {
         $this->setUsername($username);
         $this->setApiKey($apikey);
-        if ($subdomain !== NULL) {
+        if ($subdomain !== null) {
             $this->setSubdomain($subdomain);
         }
+    }
+
+    /**
+     * Prepare a request for TribeHR API.
+     *
+     * @param $uri
+     * @param string $method
+     * @param array $options
+     * @return \GuzzleHttp\Message\RequestInterface
+     */
+    public function createRequest($uri, $method = 'GET', $options = [])
+    {
+        if (empty($this->subdomain) || empty($this->username) || empty($this->apikey)) {
+            throw new \InvalidArgumentException("Access details for API have not been completely specified.");
+        }
+
+        $url = sprintf("https://%s.mytribehr.com/%s", $this->subdomain,
+          trim($uri, '/'));
+        $options += [
+            'auth' => [$this->username, $this->apikey],
+        ];
+
+        $request = $this->httpClient->createRequest($method, $url, $options);
+        $request->addHeader('X-API-Version', static::API_VERSION);
+
+        return $request;
     }
 
     /**
@@ -97,83 +137,53 @@ class Client {
      * @param array $options
      * @return string
      */
-    public function request($uri, $method = 'GET', $options = []) {
-        if (empty($this->subdomain) || empty($this->username) || empty($this->apikey)) {
-            throw new \InvalidArgumentException("Access details for API have not been completely specified.");
-        }
-
-        $options += [
-            'auth' => [$this->username, $this->apikey],
-        ];
-
-        $url = sprintf("https://%s.mytribehr.com/%s", $this->subdomain, trim($uri, '/'));
-        $request = $this->httpClient->createRequest($method, $url, $options);
+    public function request($uri, $method = 'GET', $options = [])
+    {
+        $request = $this->createRequest($uri, $method, $options);
         $response = $this->httpClient->send($request);
+
         return (string) $response->getBody();
     }
 
     /**
      * Send Kudos to another user.
      *
-     * @param array $receiver_ids
-     * @param string $kudos_note
-     * @param array $values
+     * @param \Hussainweb\TribeHr\Message\Kudos $kudos
+     *
+     * @throws \Hussainweb\TribeHr\TribeHrException
      */
-    public function sendKudos($receiver_ids, $kudos_note, $values = []) {
-        $user_emails = NULL;
-        $user_ids = [];
-        foreach ($receiver_ids as $id) {
-            // If the id is an email address, map it to the id.
-            if (!is_numeric($id)) {
-                // Only load users and emails if not already done.
-                if ($user_emails === NULL) {
-                    $user_emails = array_flip($this->getUserEmails());
-                }
-
-                if (!empty($user_emails[$id])) {
-                    $user_ids[] = $user_emails[$id];
-                }
-            }
-            else {
-                $user_ids[] = $id;
-            }
-        }
-
-        if (empty($user_ids)) {
-            throw new \InvalidArgumentException("No receiver users found or specified.");
-        }
-
-        $data = array(
-          'note' => $kudos_note,
-          'user_id' => $user_ids,
-          'value_id' => $values,
-        );
-        $response = $this->request('kudos.xml', 'POST', ['body' => $data]);
+    public function sendKudos(Kudos $kudos)
+    {
+        $request = $this->createRequest('kudos.json', 'POST', [
+            'body' => $kudos->getPostData(),
+            'headers' => ['X-Source' => $kudos->getSource() ?: ''],
+        ]);
+        $response = $this->httpClient->send($request);
 
         // Check if we got an error.
-        $response = new \SimpleXMLElement($response);
-        if ($response->getName() == 'error') {
-            $messages = [];
-            foreach ($response->messages as $msg) {
-                $messages[] = (string) $msg;
-            }
-            throw new TribeHrException($messages, (string) $response->code);
+        if ($response->getStatusCode() !== 200)
+        {
+            $response_json = json_decode($response->getBody(), true);
+            $messages = $response_json['error']['messages'];
+            throw new TribeHrException($messages, (string) $response_json['code']);
         }
     }
 
     /**
      * Get all the users keyed by their id.
      *
-     * @return array
+     * @return \Hussainweb\TribeHr\Message\UserBasic[]
      */
-    public function getUsers() {
+    public function getUsers()
+    {
         $user_list = [];
 
-        $response = $this->request('users.xml');
-        $users = new \SimpleXMLElement($response);
-        // TODO: Store users as a data object rather than the XML element.
-        foreach ($users->user as $user) {
-            $user_list[(string) $user['id']] = $user;
+        $response = $this->request('users.json');
+        $response_json = json_decode($response, true);
+
+        foreach ($response_json as $user_json) {
+            $user = new UserBasic($user_json);
+            $user_list[(string) $user->getId()] = $user;
         }
 
         return $user_list;
@@ -181,13 +191,15 @@ class Client {
 
     /**
      * Get all the email addresses of the users keyed by their id.
+     *
      * @return array
      */
-    public function getUserEmails() {
+    public function getUserEmails()
+    {
         $user_list = [];
         $users = $this->getUsers();
-        foreach ($users as $user) {
-            $user_list[(string) $user['id']] = (string) $user['email'];
+        foreach ($users as $id => $user) {
+            $user_list[$id] = (string) $user->getEmail();
         }
 
         return $user_list;
