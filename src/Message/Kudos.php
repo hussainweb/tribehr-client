@@ -23,21 +23,21 @@ class Kudos extends KudosBasic
     public function getPostData()
     {
         $data = [
-            'text' => $this->getText(),
+            'text=' . urlencode($this->getText()),
         ];
 
         $recipients = $this->getRecipients();
         array_walk($recipients, function ($value) use (&$data) {
             /** @var $value \Hussainweb\TribeHr\Message\UserBasic */
-            $data['recipients[][id]'] = $value->getId();
+            $data[] = urlencode('recipients[][id]') . '=' . urlencode($value->getId());
         });
 
         $values = $this->getValues() ?: [];
         array_walk($values, function ($value) use (&$data) {
-            $data['values[][id]'] = $value['id'];
+            $data[] = urlencode('values[][id]') . '=' . urlencode($value['id']);
         });
 
-        return http_build_query($data);
+        return implode('&', $data);
     }
 
     /**
