@@ -15,7 +15,7 @@ class KudosBasic extends Message
     private $source;
     private $created;
 
-    public function setData($data)
+    public function setData(array $data)
     {
         parent::setData($data);
 

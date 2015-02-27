@@ -34,6 +34,15 @@ class UserBasic extends Message
     public function setData(array $data) {
         parent::setData($data);
 
+        $data += [
+          'id' => '',
+          'username' => '',
+          'email' => '',
+          'display_name' => '',
+          'employee_record' => [],
+          'url' => '',
+        ];
+
         $this->id = $data['id'];
         $this->username = $data['username'];
         $this->email = $data['email'];

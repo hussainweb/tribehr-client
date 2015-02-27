@@ -12,7 +12,7 @@ class Kudos extends KudosBasic
         parent::__construct($data);
     }
 
-    public function setData($data)
+    public function setData(array $data)
     {
         parent::setData($data);
 
@@ -26,12 +26,14 @@ class Kudos extends KudosBasic
             'text' => $this->getText(),
         ];
 
-        array_walk($this->getRecipients(), function ($value) use (&$data) {
+        $recipients = $this->getRecipients();
+        array_walk($recipients, function ($value) use (&$data) {
             /** @var $value \Hussainweb\TribeHr\Message\UserBasic */
             $data['recipients[][id]'] = $value->getId();
         });
 
-        array_walk($this->getValues(), function ($value) use (&$data) {
+        $values = $this->getValues() ?: [];
+        array_walk($values, function ($value) use (&$data) {
             $data['values[][id]'] = $value['id'];
         });
 

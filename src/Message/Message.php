@@ -16,7 +16,7 @@ class Message
     {
         if (isset($data))
         {
-            $this->setRawData($data);
+            $this->setData($data);
         }
     }
 
