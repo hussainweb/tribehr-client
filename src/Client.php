@@ -124,6 +124,10 @@ class Client
         ];
 
         $request = $this->httpClient->createRequest($method, $url, $options);
+
+        // We need to force the Content-type as otherwise Guzzle puts an empty
+        // header, which TribeHR servers can't digest and spits out 400.
+        $request->addHeader('Content-type', 'application/x-www-form-urlencoded');
         $request->addHeader('X-API-Version', static::API_VERSION);
 
         return $request;
