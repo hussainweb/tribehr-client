@@ -8,6 +8,7 @@ namespace Hussainweb\TribeHr;
 
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
 use Hussainweb\TribeHr\Message\Kudos;
+use Hussainweb\TribeHr\Message\LeaveBasic;
 use Hussainweb\TribeHr\Message\UserBasic;
 
 class Client
@@ -207,5 +208,24 @@ class Client
         }
 
         return $user_list;
+    }
+
+    /**
+     * Get all the leaves.
+     *
+     * @param string $status
+     * @return \Hussainweb\TribeHr\Message\LeaveBasic[]
+     */
+    public function getLeaves($status = 'all')
+    {
+        $url = sprintf('leave_requests.json?status=%s', $status);
+        $response = $this->request($url);
+        $response_json = json_decode($response, true);
+
+        $leaves = array_map(function ($value) {
+            return new LeaveBasic($value);
+        }, $response_json);
+
+        return $leaves;
     }
 }
