@@ -3,10 +3,9 @@
 namespace Hussainweb\TribeHr\Message;
 
 
-class UserBasic extends Message
+class UserBasic extends MessageWithId
 {
 
-    private $id;
     private $username;
     private $email;
     private $displayName;
@@ -21,7 +20,6 @@ class UserBasic extends Message
     public function getData() {
         $data = parent::getData();
 
-        $data['id'] = $this->id;
         $data['username'] = $this->username;
         $data['email'] = $this->email;
         $data['display_name'] = $this->displayName;
@@ -43,28 +41,11 @@ class UserBasic extends Message
           'url' => '',
         ];
 
-        $this->id = $data['id'];
         $this->username = $data['username'];
         $this->email = $data['email'];
         $this->displayName = $data['display_name'];
         $this->employeeRecord = $data['employee_record'];
         $this->url = $data['url'];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**

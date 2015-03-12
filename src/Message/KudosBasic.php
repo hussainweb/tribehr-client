@@ -2,10 +2,9 @@
 
 namespace Hussainweb\TribeHr\Message;
 
-class KudosBasic extends Message
+class KudosBasic extends MessageWithId
 {
 
-    private $id;
     private $poster;
     private $recipients;
     private $picture;
@@ -19,7 +18,6 @@ class KudosBasic extends Message
     {
         parent::setData($data);
 
-        $this->id = $data['id'];
         $this->poster = new UserBasic($data['poster']);
         $this->recipients = array_map(function ($data) {
             return new UserBasic($data);
@@ -30,22 +28,6 @@ class KudosBasic extends Message
         $this->url = $data['url'];
         $this->source = $data['source'];
         $this->created = $data['created'];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**
