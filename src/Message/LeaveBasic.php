@@ -40,11 +40,12 @@ class LeaveBasic extends MessageWithId
         parent::setData($data);
 
         $data += [
+            'leave_type' => [],
             'status' => '',
         ];
 
-        $this->startDate = $data['date_start'];
-        $this->endDate = $data['date_end'];
+        $this->startDate = new \DateTime($data['date_start']);
+        $this->endDate = new \DateTime($data['date_end']);
         $this->status = $data['status'];
         $this->url = $data['url'];
         $this->user = new UserBasic($data['user']);
@@ -62,7 +63,7 @@ class LeaveBasic extends MessageWithId
     /**
      * @param \DateTimeInterface $startDate
      */
-    public function setStartDate($startDate)
+    public function setStartDate(\DateTimeInterface $startDate)
     {
         $this->startDate = $startDate;
     }
@@ -78,7 +79,7 @@ class LeaveBasic extends MessageWithId
     /**
      * @param \DateTimeInterface $endDate
      */
-    public function setEndDate($endDate)
+    public function setEndDate(\DateTimeInterface $endDate)
     {
         $this->endDate = $endDate;
     }
