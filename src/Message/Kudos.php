@@ -7,17 +7,12 @@ class Kudos extends KudosBasic
     private $values;
     private $comments;
 
-    public function __construct($data = NULL)
-    {
-        parent::__construct($data);
-    }
-
     public function setData(array $data)
     {
         parent::setData($data);
 
-        $this->values = $data['values'];
-        $this->comments = $data['comments'];
+        $this->values = isset($data['values']) ? $data['values'] : [];
+        $this->comments = isset($data['comments']) ? $data['comments'] : [];
     }
 
     public function getPostData()
@@ -41,7 +36,7 @@ class Kudos extends KudosBasic
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getValues()
     {
@@ -49,9 +44,9 @@ class Kudos extends KudosBasic
     }
 
     /**
-     * @param mixed $values
+     * @param array $values
      */
-    public function setValues($values)
+    public function setValues(array $values)
     {
         $this->values = $values;
     }

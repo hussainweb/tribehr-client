@@ -2,6 +2,8 @@
 
 namespace Hussainweb\TribeHr\Message;
 
+use Hussainweb\TribeHr\TribeHrException;
+
 class LeaveBasic extends MessageWithId
 {
 
@@ -40,12 +42,21 @@ class LeaveBasic extends MessageWithId
         parent::setData($data);
 
         $data += [
+            'id' => '',
             'leave_type' => [],
             'status' => '',
         ];
 
-        $this->startDate = new \DateTime($data['date_start']);
-        $this->endDate = new \DateTime($data['date_end']);
+        if (!isset($data['date_start'])
+            || !isset($data['date_end'])
+            || !isset($data['url'])
+            || !isset($data['user'])
+        ) {
+            throw new TribeHrException(["Missing required data"]);
+        }
+
+        $this->startDate = $data['date_start'] instanceof \DateTimeInterface ? $data['date_start'] : new \DateTime($data['date_start']);
+        $this->endDate = $data['date_end'] instanceof \DateTimeInterface ? $data['date_end'] : new \DateTime($data['date_end']);
         $this->status = $data['status'];
         $this->url = $data['url'];
         $this->user = new UserBasic($data['user']);
@@ -62,10 +73,12 @@ class LeaveBasic extends MessageWithId
 
     /**
      * @param \DateTimeInterface $startDate
+     * @param \DateTimeInterface $endDate
      */
-    public function setStartDate(\DateTimeInterface $startDate)
+    public function setDuration(\DateTimeInterface $startDate, \DateTimeInterface $endDate)
     {
         $this->startDate = $startDate;
+        $this->endDate = $endDate;
     }
 
     /**
@@ -74,14 +87,6 @@ class LeaveBasic extends MessageWithId
     public function getEndDate()
     {
         return $this->endDate;
-    }
-
-    /**
-     * @param \DateTimeInterface $endDate
-     */
-    public function setEndDate(\DateTimeInterface $endDate)
-    {
-        $this->endDate = $endDate;
     }
 
     /**
@@ -127,7 +132,7 @@ class LeaveBasic extends MessageWithId
     /**
      * @param UserBasic $user
      */
-    public function setUser($user)
+    public function setUser(UserBasic $user)
     {
         $this->user = $user;
     }
@@ -143,7 +148,7 @@ class LeaveBasic extends MessageWithId
     /**
      * @param array $leaveType
      */
-    public function setLeaveType($leaveType)
+    public function setLeaveType(array $leaveType)
     {
         $this->leaveType = $leaveType;
     }

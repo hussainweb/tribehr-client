@@ -2,6 +2,8 @@
 
 namespace Hussainweb\TribeHr\Message;
 
+use Hussainweb\TribeHr\TribeHrException;
+
 class KudosBasic extends MessageWithId
 {
 
@@ -18,16 +20,21 @@ class KudosBasic extends MessageWithId
     {
         parent::setData($data);
 
+        if (!isset($data['poster'])
+            || !isset($data['recipients'])
+            || !isset($data['text'])
+        ) {
+            throw new TribeHrException(["Missing required data"]);
+        }
+
         $this->poster = new UserBasic($data['poster']);
-        $this->recipients = array_map(function ($data) {
-            return new UserBasic($data);
-        }, $data['recipients']);
-        $this->picture = $data['picture'];
+        $this->setRecipients($data['recipients']);
+        $this->picture = isset($data['picture']) ? $data['picture'] : NULL;
         $this->text = $data['text'];
-        $this->commentCount = $data['comment_count'];
-        $this->url = $data['url'];
-        $this->source = $data['source'];
-        $this->created = $data['created'];
+        $this->commentCount = isset($data['comment_count']) ? $data['comment_count'] : NULL;
+        $this->url = isset($data['url']) ? $data['url'] : NULL;
+        $this->source = isset($data['source']) ? $data['source'] : '';
+        $this->created = isset($data['created']) ? $data['created'] : NULL;
     }
 
     /**
@@ -41,7 +48,7 @@ class KudosBasic extends MessageWithId
     /**
      * @param \Hussainweb\TribeHr\Message\UserBasic $poster
      */
-    public function setPoster($poster)
+    public function setPoster(UserBasic $poster)
     {
         $this->poster = $poster;
     }
@@ -55,11 +62,13 @@ class KudosBasic extends MessageWithId
     }
 
     /**
-     * @param \Hussainweb\TribeHr\Message\UserBasic[] $recipients
+     * @param array $recipients
      */
-    public function setRecipients($recipients)
+    public function setRecipients(array $recipients)
     {
-        $this->recipients = $recipients;
+        $this->recipients = array_map(function ($data) {
+            return $data instanceof UserBasic ? $data : new UserBasic($data);
+        }, $recipients);
     }
 
     /**
