@@ -2,8 +2,6 @@
 
 namespace Hussainweb\TribeHr\Message;
 
-use Hussainweb\TribeHr\TribeHrException;
-
 class LeaveBasic extends MessageWithId
 {
 
@@ -52,7 +50,7 @@ class LeaveBasic extends MessageWithId
             || !isset($data['url'])
             || !isset($data['user'])
         ) {
-            throw new TribeHrException(["Missing required data"]);
+            throw new \InvalidArgumentException("Missing required data");
         }
 
         $this->startDate = $data['date_start'] instanceof \DateTimeInterface

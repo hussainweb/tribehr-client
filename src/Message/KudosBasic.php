@@ -2,8 +2,6 @@
 
 namespace Hussainweb\TribeHr\Message;
 
-use Hussainweb\TribeHr\TribeHrException;
-
 class KudosBasic extends MessageWithId
 {
 
@@ -24,7 +22,7 @@ class KudosBasic extends MessageWithId
             || !isset($data['recipients'])
             || !isset($data['text'])
         ) {
-            throw new TribeHrException(["Missing required data"]);
+            throw new \InvalidArgumentException("Missing required data");
         }
 
         $this->poster = new UserBasic($data['poster']);

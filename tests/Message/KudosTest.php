@@ -79,7 +79,7 @@ class KudosTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Hussainweb\TribeHr\TribeHrException
+     * @expectedException \InvalidArgumentException
      */
     public function testInvalidData()
     {
