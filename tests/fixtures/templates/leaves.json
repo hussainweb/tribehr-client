@@ -1,0 +1,44 @@
+[
+  '{{repeat(4,6)}}',
+  {
+    "id": "{{index()+1}}",
+    "leave_type_id": "{{random(1, 2, 3)}}",
+    "user_id": "38",
+    "comments": "{{lorem(20, 'words')}}",
+    "date_start": "{{date(new Date(2014, 0, 1), new Date(), 'YYYY-MM-dd')}}",
+    "date_end": "{{date(new Date(2014, 0, 1), new Date(), 'YYYY-MM-dd')}}",
+    "time_start": null,
+    "time_end": null,
+    "days": "1.000000",
+    "hours": "7.00000",
+    "status": "0",
+    "created": "8 days ago",
+    "created_timestamp": "{{date(new Date(2014, 0, 1), new Date(), 'YYYY-MM-dd hh:mm:ss')}}",
+    "modified": "{{date(new Date(2014, 0, 1), new Date(), 'YYYY-MM-dd hh:mm:ss')}}",
+    "status_text": "{{random('Pending', 'Approved')}}",
+    "user": {
+      "id": "38",
+      "email": "{{email()}}",
+      "full_name": "{{firstName()}} {{surname()}}"
+    },
+    "leave_type": {
+      "id": "1",
+      "name": "Consolidated Leave",
+      "action_phrase": "Take time off",
+      "default_annual_quota": "15.0000",
+      "default_carry_over": "0.0000",
+      "show_on_calendar": true,
+      "visibility": "1",
+      "hide": false,
+      "accrual_mode": "2",
+      "unpaid": false,
+      "carry_over_expiry_month": "0",
+      "anchor_date": null,
+      "anchor_date2": null,
+      "anchor_end_of_month": "0",
+      "no_accrual_until": "2015-01-18",
+      "created": "2010-03-01 17:25:05",
+      "modified": "2016-01-18 07:52:08"
+    }
+  }
+]

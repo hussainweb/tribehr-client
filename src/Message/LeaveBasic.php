@@ -47,7 +47,6 @@ class LeaveBasic extends MessageWithId
 
         if (!isset($data['date_start'])
             || !isset($data['date_end'])
-            || !isset($data['url'])
             || !isset($data['user'])
         ) {
             throw new \InvalidArgumentException("Missing required data");
@@ -60,7 +59,7 @@ class LeaveBasic extends MessageWithId
             ? $data['date_end']
             : new \DateTime($data['date_end']);
         $this->status = $data['status'];
-        $this->url = $data['url'];
+        $this->url = isset($data['url']) ? $data['url'] : null;
         $this->user = new UserBasic($data['user']);
         $this->leaveType = $data['leave_type'];
     }

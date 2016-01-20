@@ -7,6 +7,7 @@
 namespace Hussainweb\TribeHr;
 
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
+use GuzzleHttp\Psr7\Request;
 use Hussainweb\TribeHr\Message\Kudos;
 use Hussainweb\TribeHr\Message\LeaveBasic;
 use Hussainweb\TribeHr\Message\UserBasic;
@@ -44,63 +45,33 @@ class Client
 
     /**
      * @param GuzzleClientInterface $http_client
-     * @param string|null $subdomain
-     * @param string|null $username
-     * @param string|null $apikey
+     * @param string $subdomain
+     * @param string $username
+     * @param string $apikey
      */
     public function __construct(
         GuzzleClientInterface $http_client,
-        $subdomain = null,
-        $username = null,
-        $apikey = null
+        $subdomain,
+        $username,
+        $apikey
     ) {
         $this->httpClient = $http_client;
         $this->setAccess($username, $apikey, $subdomain);
     }
 
     /**
-     * Set the subdomain.
-     *
-     * @param string $subdomain
-     */
-    public function setSubdomain($subdomain)
-    {
-        $this->subdomain = $subdomain;
-    }
-
-    /**
-     * Set the username.
-     *
-     * @param string $username
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-    }
-
-    /**
-     * Set the API key.
-     *
-     * @param string $apikey
-     */
-    public function setApiKey($apikey)
-    {
-        $this->apikey = $apikey;
-    }
-
-    /**
-     * Quickly set username and API key, and optionally, the subdomain.
+     * Set username and API key, and optionally, the subdomain.
      *
      * @param string $username
      * @param string $apikey
      * @param string|null $subdomain
      */
-    public function setAccess($username, $apikey, $subdomain = null)
+    protected function setAccess($username, $apikey, $subdomain = null)
     {
-        $this->setUsername($username);
-        $this->setApiKey($apikey);
+        $this->username = $username;
+        $this->apikey = $apikey;
         if ($subdomain !== null) {
-            $this->setSubdomain($subdomain);
+            $this->subdomain = $subdomain;
         }
     }
 
@@ -109,10 +80,11 @@ class Client
      *
      * @param $uri
      * @param string $method
-     * @param array $options
-     * @return \GuzzleHttp\Message\RequestInterface
+     * @param array $headers
+     * @param string $body
+     * @return \Psr\Http\Message\RequestInterface
      */
-    public function createRequest($uri, $method = 'GET', $options = [])
+    public function createRequest($uri, $method = 'GET', $headers = [], $body = null)
     {
         if (empty($this->subdomain) || empty($this->username) || empty($this->apikey)) {
             throw new \InvalidArgumentException("Access details for API have not been completely specified.");
@@ -123,17 +95,21 @@ class Client
             $this->subdomain,
             trim($uri, '/')
         );
-        $options += [
-            'auth' => [$this->username, $this->apikey],
-        ];
-
-        $request = $this->httpClient->createRequest($method, $url, $options);
 
         // We need to force the Content-type as otherwise Guzzle puts an empty
         // header, which TribeHR servers can't digest and spits out 400.
-        $request->addHeader('Content-type', 'application/x-www-form-urlencoded');
-        $request->addHeader('X-API-Version', static::API_VERSION);
+        $headers += [
+            'Authorization' => 'Basic ' . base64_encode($this->username . ':' . $this->apikey),
+            'Content-type' => 'application/x-www-form-urlencoded',
+            'X-API-Version' => static::API_VERSION,
+        ];
 
+        $request = new Request(
+            $method,
+            $url,
+            $headers,
+            $body
+        );
         return $request;
     }
 
@@ -142,13 +118,16 @@ class Client
      *
      * @param string $uri
      * @param string $method
-     * @param array $options
+     * @param array $headers
+     * @param string $body
      * @return string
      */
-    public function request($uri, $method = 'GET', $options = [])
+    public function request($uri, $method = 'GET', $headers = [], $body = null)
     {
-        $request = $this->createRequest($uri, $method, $options);
-        $response = $this->httpClient->send($request);
+        $request = $this->createRequest($uri, $method, $headers, $body);
+        $response = $this->httpClient->send($request, [
+            'http_errors' => false,
+        ]);
 
         return (string) $response->getBody();
     }
@@ -163,16 +142,17 @@ class Client
     public function sendKudos(Kudos $kudos)
     {
         $request = $this->createRequest('kudos.json', 'POST', [
-            'body' => $kudos->getPostData(),
-            'headers' => ['X-Source' => $kudos->getSource() ?: ''],
+            'X-Source' => $kudos->getSource() ?: '',
+        ], $kudos->getPostData());
+        $response = $this->httpClient->send($request, [
+            'http_errors' => false,
         ]);
-        $response = $this->httpClient->send($request);
 
         // Check if we got an error.
         if ($response->getStatusCode() !== 200) {
             $response_json = json_decode($response->getBody(), true);
             $messages = $response_json['error']['messages'];
-            throw new TribeHrException($messages, (string) $response_json['code']);
+            throw new TribeHrException($messages, (string) $response_json['error']['code']);
         }
     }
 

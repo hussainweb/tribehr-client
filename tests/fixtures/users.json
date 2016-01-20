@@ -1,0 +1,93 @@
+[
+  {
+    "id": 1,
+    "netsuite_id": "",
+    "email": "haleavery@uxmox.com",
+    "twitter_username": "Brennan",
+    "linkedin_url": "http://www.linkedin.com/in/Betsy",
+    "blog_url": "http://hussainweb.me",
+    "created": "2014-04-07 04:38:01",
+    "modified": "2015-06-07 09:18:26",
+    "full_name": "Dennis Chang",
+    "current_employee_record_id": 256,
+    "current_assignment_record_id": 414
+  },
+  {
+    "id": 2,
+    "netsuite_id": "",
+    "email": "dennischang@uxmox.com",
+    "twitter_username": "Dollie",
+    "linkedin_url": "http://www.linkedin.com/in/Price",
+    "blog_url": "http://hussainweb.me",
+    "created": "2015-08-14 01:15:35",
+    "modified": "2015-04-26 07:04:42",
+    "full_name": "Rodriguez York",
+    "current_employee_record_id": 176,
+    "current_assignment_record_id": 980
+  },
+  {
+    "id": 3,
+    "netsuite_id": "",
+    "email": "rodriguezyork@uxmox.com",
+    "twitter_username": "Mcclain",
+    "linkedin_url": "http://www.linkedin.com/in/Earlene",
+    "blog_url": "http://hussainweb.me",
+    "created": "2015-07-20 07:44:56",
+    "modified": "2015-12-05 02:05:27",
+    "full_name": "Ginger Jensen",
+    "current_employee_record_id": 489,
+    "current_assignment_record_id": 735
+  },
+  {
+    "id": 4,
+    "netsuite_id": "",
+    "email": "gingerjensen@uxmox.com",
+    "twitter_username": "Adrienne",
+    "linkedin_url": "http://www.linkedin.com/in/Harding",
+    "blog_url": "http://hussainweb.me",
+    "created": "2015-10-29 05:38:10",
+    "modified": "2014-09-10 10:13:00",
+    "full_name": "Erma Duncan",
+    "current_employee_record_id": 733,
+    "current_assignment_record_id": 754
+  },
+  {
+    "id": 5,
+    "netsuite_id": "",
+    "email": "ermaduncan@uxmox.com",
+    "twitter_username": "Case",
+    "linkedin_url": "http://www.linkedin.com/in/Mitzi",
+    "blog_url": "http://hussainweb.me",
+    "created": "2015-03-20 07:06:00",
+    "modified": "2014-03-25 05:41:40",
+    "full_name": "Juliana Trujillo",
+    "current_employee_record_id": 180,
+    "current_assignment_record_id": 593
+  },
+  {
+    "id": 6,
+    "netsuite_id": "",
+    "email": "julianatrujillo@uxmox.com",
+    "twitter_username": "Marshall",
+    "linkedin_url": "http://www.linkedin.com/in/Leach",
+    "blog_url": "http://hussainweb.me",
+    "created": "2014-06-10 07:03:12",
+    "modified": "2014-01-19 04:17:42",
+    "full_name": "Beth Duke",
+    "current_employee_record_id": 660,
+    "current_assignment_record_id": 385
+  },
+  {
+    "id": 7,
+    "netsuite_id": "",
+    "email": "bethduke@uxmox.com",
+    "twitter_username": "Gloria",
+    "linkedin_url": "http://www.linkedin.com/in/Tasha",
+    "blog_url": "http://hussainweb.me",
+    "created": "2014-07-04 09:07:04",
+    "modified": "2014-01-21 05:32:40",
+    "full_name": "Michael Osborne",
+    "current_employee_record_id": 940,
+    "current_assignment_record_id": 525
+  }
+]

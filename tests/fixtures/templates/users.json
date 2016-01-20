@@ -1,0 +1,16 @@
+[
+  '{{repeat(7, 10)}}',
+  {
+    "id": "{{index()+1}}",
+    "netsuite_id": "",
+    "email": "{{email()}}",
+    "twitter_username": "{{firstName()}}",
+    "linkedin_url": "http:\/\/www.linkedin.com\/in\/{{firstName()}}",
+    "blog_url": "http:\/\/hussainweb.me",
+    "created": '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-dd hh:mm:ss")}}',
+    "modified": '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-dd hh:mm:ss")}}',
+    "full_name": "{{firstName()}} {{surname()}}",
+    "current_employee_record_id": "{{integer(100, 1000)}}",
+    "current_assignment_record_id": "{{integer(100, 1000)}}"
+  }
+]
