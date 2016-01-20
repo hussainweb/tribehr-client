@@ -49,10 +49,10 @@ class Client
      * @param string|null $apikey
      */
     public function __construct(
-      GuzzleClientInterface $http_client,
-      $subdomain = null,
-      $username = null,
-      $apikey = null
+        GuzzleClientInterface $http_client,
+        $subdomain = null,
+        $username = null,
+        $apikey = null
     ) {
         $this->httpClient = $http_client;
         $this->setAccess($username, $apikey, $subdomain);
@@ -118,8 +118,11 @@ class Client
             throw new \InvalidArgumentException("Access details for API have not been completely specified.");
         }
 
-        $url = sprintf("https://%s.mytribehr.com/%s", $this->subdomain,
-          trim($uri, '/'));
+        $url = sprintf(
+            "https://%s.mytribehr.com/%s",
+            $this->subdomain,
+            trim($uri, '/')
+        );
         $options += [
             'auth' => [$this->username, $this->apikey],
         ];
@@ -166,8 +169,7 @@ class Client
         $response = $this->httpClient->send($request);
 
         // Check if we got an error.
-        if ($response->getStatusCode() !== 200)
-        {
+        if ($response->getStatusCode() !== 200) {
             $response_json = json_decode($response->getBody(), true);
             $messages = $response_json['error']['messages'];
             throw new TribeHrException($messages, (string) $response_json['code']);

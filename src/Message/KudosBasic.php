@@ -29,12 +29,12 @@ class KudosBasic extends MessageWithId
 
         $this->poster = new UserBasic($data['poster']);
         $this->setRecipients($data['recipients']);
-        $this->picture = isset($data['picture']) ? $data['picture'] : NULL;
+        $this->picture = isset($data['picture']) ? $data['picture'] : null;
         $this->text = $data['text'];
-        $this->commentCount = isset($data['comment_count']) ? $data['comment_count'] : NULL;
-        $this->url = isset($data['url']) ? $data['url'] : NULL;
+        $this->commentCount = isset($data['comment_count']) ? $data['comment_count'] : null;
+        $this->url = isset($data['url']) ? $data['url'] : null;
         $this->source = isset($data['source']) ? $data['source'] : '';
-        $this->created = isset($data['created']) ? $data['created'] : NULL;
+        $this->created = isset($data['created']) ? $data['created'] : null;
     }
 
     /**
@@ -158,5 +158,4 @@ class KudosBasic extends MessageWithId
     {
         return $this->created;
     }
-
 }

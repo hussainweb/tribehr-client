@@ -58,5 +58,4 @@ class Kudos extends KudosBasic
     {
         return $this->comments;
     }
-
 }

@@ -78,7 +78,8 @@ class LeaveBasicTest extends \PHPUnit_Framework_TestCase
         new LeaveBasic($dummy_data);
     }
 
-    public function leaveData() {
+    public function leaveData()
+    {
         return [
             [
                 [

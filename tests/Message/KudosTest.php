@@ -99,7 +99,8 @@ class KudosTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $kudos->getPostData());
     }
 
-    public function kudosData() {
+    public function kudosData()
+    {
         return [
             [
                 [

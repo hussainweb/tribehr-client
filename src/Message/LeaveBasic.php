@@ -55,8 +55,12 @@ class LeaveBasic extends MessageWithId
             throw new TribeHrException(["Missing required data"]);
         }
 
-        $this->startDate = $data['date_start'] instanceof \DateTimeInterface ? $data['date_start'] : new \DateTime($data['date_start']);
-        $this->endDate = $data['date_end'] instanceof \DateTimeInterface ? $data['date_end'] : new \DateTime($data['date_end']);
+        $this->startDate = $data['date_start'] instanceof \DateTimeInterface
+            ? $data['date_start']
+            : new \DateTime($data['date_start']);
+        $this->endDate = $data['date_end'] instanceof \DateTimeInterface
+            ? $data['date_end']
+            : new \DateTime($data['date_end']);
         $this->status = $data['status'];
         $this->url = $data['url'];
         $this->user = new UserBasic($data['user']);

@@ -80,7 +80,8 @@ class UserBasicTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['id'], $user->getId());
     }
 
-    public function userData() {
+    public function userData()
+    {
         return [
             [
                 [

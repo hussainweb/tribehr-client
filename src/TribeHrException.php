@@ -5,13 +5,14 @@
 
 namespace Hussainweb\TribeHr;
 
-class TribeHrException extends \Exception {
+class TribeHrException extends \Exception
+{
     protected $messages;
 
     public function __construct(
-      $messages = [],
-      $code = 0,
-      \Exception $previous = null
+        $messages = [],
+        $code = 0,
+        \Exception $previous = null
     ) {
         parent::__construct(implode("\n", $messages), $code, $previous);
         $this->messages = $messages;
@@ -22,7 +23,8 @@ class TribeHrException extends \Exception {
      *
      * @return string[]
      */
-    public function getMessages() {
+    public function getMessages()
+    {
         return $this->messages;
     }
 }

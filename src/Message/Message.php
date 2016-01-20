@@ -12,10 +12,9 @@ class Message
      */
     private $rawData;
 
-    public function __construct($data = NULL)
+    public function __construct($data = null)
     {
-        if (isset($data))
-        {
+        if (isset($data)) {
             $this->setData($data);
         }
     }

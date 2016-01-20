@@ -2,7 +2,6 @@
 
 namespace Hussainweb\TribeHr\Message;
 
-
 class UserBasic extends MessageWithId
 {
 
@@ -12,12 +11,13 @@ class UserBasic extends MessageWithId
     private $employeeRecord;
     private $url;
 
-    public function __construct($data = NULL)
+    public function __construct($data = null)
     {
         parent::__construct($data);
     }
 
-    public function getData() {
+    public function getData()
+    {
         $data = parent::getData();
 
         $data['username'] = $this->username;
@@ -29,7 +29,8 @@ class UserBasic extends MessageWithId
         return $data;
     }
 
-    public function setData(array $data) {
+    public function setData(array $data)
+    {
         parent::setData($data);
 
         $data += [

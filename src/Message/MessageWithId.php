@@ -10,10 +10,10 @@ class MessageWithId extends Message
      */
     private $id;
 
-    public function __construct($data = NULL)
+    public function __construct($data = null)
     {
         parent::__construct($data);
-        $this->id = $data['id'] ?: NULL;
+        $this->id = $data['id'] ?: null;
     }
 
     /**
@@ -36,7 +36,8 @@ class MessageWithId extends Message
         $this->id = $id;
     }
 
-    public function getData() {
+    public function getData()
+    {
         $data = parent::getData();
         $data['id'] = $this->getId();
         return $data;
